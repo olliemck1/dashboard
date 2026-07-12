@@ -7,6 +7,10 @@ const app = express();
 const PORT = 5000;
 const mongoose = require('mongoose');
 const SpotifyToken = require('./models/SpotifyToken')
+const Assignment = require("./models/assignments");
+const assignments = require('./models/assignments');
+app.use(express.json())
+
 
 mongoose.connect(process.env.DB_URI)
   .then(() => console.log("Success"))
@@ -132,3 +136,49 @@ async function ensureAuthenticated(req, res, next) {
   }
   next();
 }
+
+
+
+app.get("./api/assignments", async (req, res) => {
+  try {
+    const assingnments = await Assignment.find({dashboardId: "primary_user"}).sort({ dueDate: 1});
+    res.json(assignments);
+  } catch(err) {
+    res.status(500).json({error: "failed to fetch assignments"});
+  }
+});
+
+app.post("/api/assignmnets", async (req,res) => {
+  try {
+    const newAssignment = new Assignment(req.body);
+    await newAssignment.save();
+    res.status(201).json(newAssignment);
+
+  } catch(err) {
+    res.status(400).json({ error: "failed to create assigment"})
+  }
+});
+
+app.put("/api/assignments/:id", async (req,res) =>{
+  try {
+    const updatedAssignment = await Assignment.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {new: true}
+    );
+    res.json(updatedAssignment);
+
+  }catch(err) {
+    res.status(400).json({error: "failed to update assignment"})
+  }
+});
+
+app.delete("api/assignments/:id", async (req, res) =>{
+  try {
+    await Assignment.findByIdAndDelete(req.params.id);
+    res.json({message: "Assignment Deleted"})
+
+  } catch(err) {
+    res.status(400).json({error: "failed to delete assignment"})
+  }
+})
