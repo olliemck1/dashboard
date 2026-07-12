@@ -10,7 +10,7 @@ const SpotifyToken = require('./models/SpotifyToken')
 const Assignment = require("./models/assignments");
 const assignments = require('./models/assignments');
 app.use(express.json())
-
+app.use(cors({origin: 'http://localhost:5173'})); 
 
 mongoose.connect(process.env.DB_URI)
   .then(() => console.log("Success"))
@@ -86,7 +86,7 @@ app.get('/callback', async (req, res) => {
     });
   });
 
-app.use(cors({origin: 'http://localhost:5173'})); // This allows the React app to connect to this server
+
 
 app.get('/', (req, res) => {
   res.json({ message: "Backend is online!" });
@@ -139,24 +139,24 @@ async function ensureAuthenticated(req, res, next) {
 
 
 
-app.get("./api/assignments", async (req, res) => {
+app.get("/api/assignments", async (req, res) => {
   try {
-    const assingnments = await Assignment.find({dashboardId: "primary_user"}).sort({ dueDate: 1});
+    const assignments = await Assignment.find({dashboardID: "primary_user"}).sort({ dueDate: 1});
     res.json(assignments);
   } catch(err) {
     res.status(500).json({error: "failed to fetch assignments"});
   }
 });
 
-app.post("/api/assignmnets", async (req,res) => {
+app.post("/api/assignments", async (req, res) => {
   try {
     const newAssignment = new Assignment(req.body);
     await newAssignment.save();
     res.status(201).json(newAssignment);
-
   } catch(err) {
-    res.status(400).json({ error: "failed to create assigment"})
-  }
+      console.error("Validation Error:", err.message); 
+      res.status(400).json({ error: "failed to create assignment", details: err.message });
+    }
 });
 
 app.put("/api/assignments/:id", async (req,res) =>{
