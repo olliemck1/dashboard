@@ -137,6 +137,46 @@ async function ensureAuthenticated(req, res, next) {
   next();
 }
 
+app.put("/api/spotify/play", async (req,res) => {
+  try {
+    await spotifyApi.play();
+    res.status(200).json({mesage:"playing"});
+  } catch(err) {
+    console.error("error playing ", err.mesage);
+    res.status(400).json({ error:"failed to play"});
+  }
+});
+
+app.put("/api/spotify/pause", async (req,res)=>{
+  try {
+    await spotifyApi.pause()
+    res.status(200).json({message:"paused"})
+  }catch(err) {
+    console.error("error pausing",err.message)
+    res.status(400).json({error:"faild to pause"})
+  }
+});
+
+app.post("/api/spotify/next", async (req,res)=> {
+  try {
+    await spotifyApi.skipToNext();
+    res.status(200).json({message:"skipped to next"});
+  } catch(err) {
+    console.error("error skipping", err.message);
+    res.status(400).json({error:"failed to skip"})
+  }
+});
+
+app.post("/api/spotify/previous", async (req,res)=> {
+  try {
+    await spotifyApi.skipToPrevious();
+    res.status(200).json({message:"rewinded"})
+  }catch(err) {
+    console.error("error rewinding", err.message);
+    res.status(400).json({error:"failed to rewind"})
+  }
+})
+
 
 
 app.get("/api/assignments", async (req, res) => {
