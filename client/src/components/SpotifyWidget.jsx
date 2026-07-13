@@ -11,17 +11,16 @@ function SpotifyWidget() {
         const response = await fetch(`/api/spotify/${action}`, {
             method: method,
         });
-
-        // NEW: Force it to read the response from the backend
         const data = await response.json(); 
         
         if (!response.ok) {
-            // If the status is 400, 403, 404, etc., print it in bright red!
             console.error(`Spotify API Error (${response.status}):`, data);
         } else {
             console.log(`Success: ${action}`, data);
         }
-
+        if (action === "next" || action === "previous") {
+            setTimeout(() =>{},500)
+        }
         } catch (error) {
         console.error(`Network Error on ${action}:`, error);
         }

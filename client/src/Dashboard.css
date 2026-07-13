@@ -1,0 +1,46 @@
+
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr; 
+  grid-template-rows: auto 1fr; 
+  gap: 24px;
+  padding: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: 90vh; 
+  font-family: sans-serif;
+}
+
+.dashboard-card {
+  background: hsl(228, 16%, 13%);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+
+.assignments-area {
+  grid-column: 1 / 2; 
+  grid-row: 1 / 3;    
+  overflow-y: auto;   
+}
+
+.spotify-area {
+  grid-column: 2 / 3; 
+  grid-row: 1 / 2;    
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+.email-placeholder {
+  grid-column: 2 / 3; 
+  grid-row: 2 / 3;    
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #e2e8f0;
+  background: transparent;
+  box-shadow: none;
+}
