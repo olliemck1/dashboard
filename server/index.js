@@ -173,7 +173,7 @@ app.put("/api/assignments/:id", async (req,res) =>{
   }
 });
 
-app.delete("api/assignments/:id", async (req, res) =>{
+app.delete("/api/assignments/:id", async (req, res) =>{
   try {
     await Assignment.findByIdAndDelete(req.params.id);
     res.json({message: "Assignment Deleted"})
