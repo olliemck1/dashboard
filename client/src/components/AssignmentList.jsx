@@ -1,18 +1,7 @@
-import { useState, useEffect } from "react";
-
-const AssignmentList = () => {
-  const [assignments, setAssignments] = useState([]);
-
-  useEffect(() => {
-    const fetchAssignments = async () => {
-      const res = await fetch("/api/assignments");
-      const data = await res.json();
-      setAssignments(data);
-    };
-
-    fetchAssignments();
-  }, []); 
-
+// 1. Notice we don't need useState or useEffect imports anymore!
+const AssignmentList = ({ assignments, refreshData }) => {
+  
+  // 2. We use the refreshData function passed from the Dashboard to trigger updates
   const handleDelete = async (id) => {
     try {
       const response = await fetch (`api/assignments/${id}`, {
@@ -20,23 +9,20 @@ const AssignmentList = () => {
       });
 
       if (response.ok) {
-        setAssignments((prevAssignment) =>
-          prevAssignment.filter((assignment) => assignment._id !== id)
-      );
+        refreshData(); 
       } else {
-        console.error("Failed to delete (server side)")
+        console.error("Failed to delete (server side)");
       }
     } catch (error) {
-      console.error("Failed to delete (client)", error)
+      console.error("Failed to delete (client)", error);
     }
   };
-  
-  console.log("Raw Database Data:", assignments);
+
   const upcomingDeadlines = assignments
     .filter(event => event.source === "blackboard")
     .filter(event => event.dueDate)
     .filter(event => new Date(event.dueDate) >= new Date())
-    .sort((a,b) => new Date(a.dueDate)- new Date(b.dueDate))
+    .sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate))
     .slice(0,3);
 
 return (
