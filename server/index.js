@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const SpotifyToken = require('./models/SpotifyToken')
 const Assignment = require("./models/assignments");
 const ical = require("node-ical")
+const cron = require("node-cron")
 app.use(express.json())
 app.use(cors({origin: 'http://localhost:5173'})); 
 
@@ -20,6 +21,11 @@ mongoose.connect(process.env.DB_URI)
 
 app.listen(PORT, () => {
   console.log(`Server is running! Open your browser to http://127.0.0.1:${PORT}`);
+});
+
+cron.schedule("0 * * * *", () => {
+  console.log("Syncing Calendar");
+  syncCalendars();
 });
 
 const spotifyApi = new SpotifyWebAPi({
@@ -214,7 +220,9 @@ const syncCalendars = async () => {
         if (item.type === "VEVENT") {
           const eventData = {
             title: item.summary,
-            dueData: item.end || item.start,
+            dueDate: item.end || item.start || item.due,
+            startDate: item.start,
+            endDate: item.end,
             subject: item.location || "University",
             source: calendar.sourceName,
             dashboardID: "primary_user"

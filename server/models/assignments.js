@@ -4,6 +4,8 @@ const assignmentSchema = new mongoose.Schema({
     title: { type: String, required: true },
     subject: String,
     dueDate: Date,
+    startDate: Date,
+    endDate: Date,
     priority: { type: String, enum: ["Low", "Medium", "High"], default: "Medium" },
     status: { type: String, enum: ["Not Started", "In Progress", "Completed"], default: "Not Started" },
     createdAt: { type: Date, default: Date.now },
