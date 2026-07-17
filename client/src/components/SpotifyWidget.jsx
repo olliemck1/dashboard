@@ -5,7 +5,7 @@ function SpotifyWidget() {
     const [track, setTrack] = useState(null);
     const [loading, setLoading] = useState(true);
     const handlePlayback = async (action) => {
-        const method = action === 'play' || action === 'pause' ? 'PUT' : 'POST';
+        const method = action === 'play' || action === 'pause' ? 'PUT' : 'POST'; 
         
         try {
         const response = await fetch(`/api/spotify/${action}`, {
@@ -19,28 +19,34 @@ function SpotifyWidget() {
             console.log(`Success: ${action}`, data);
         }
         if (action === "next" || action === "previous") {
-            setTimeout(() =>{},500)
+            setTimeout(() =>{fetchCurrentTrack()},500)
         }
         } catch (error) {
         console.error(`Network Error on ${action}:`, error);
         }
     };
-    useEffect(() => {
-
+    const fetchCurrentTrack = () => {
         fetch("http://127.0.0.1:5000/api/spotify/current-track")
-        .then((res) => {
-            if (res.status === 401) {
-                setTrack({ error:"Please log in"});
-                return;
-            }
-            return res.json();
-    })
-        .then((data) => {
-            setTrack(data);
-            setLoading(false);
-        })
-        .catch((err) => console.error("Error Fetcing Track:",err));
-    },[]);
+            .then((res) => {
+                if (res.status === 401) {
+                    setTrack({error: "please log in"});
+                    return;
+                }
+                return res.json();
+            })
+            .then((data)=> {
+                if (data) {
+                    setTrack(data);
+                }
+                setLoading(false)
+            })
+            .catch((err) => console.error("Error Fetching Track",err));
+    };
+
+    useEffect(()=> {
+        fetchCurrentTrack();
+    }, []);
+
 
     if (loading) return <div>Loading Music...</div>;
     if (!track|| !track.name) return <div>No Music Playing</div>
