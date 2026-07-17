@@ -11,7 +11,7 @@ const Assignment = require("./models/assignments");
 const ical = require("node-ical")
 const cron = require("node-cron")
 app.use(express.json())
-app.use(cors({origin: 'http://localhost:5173'})); 
+app.use(cors({origin: 'https://dashboard-y2lo.onrender.com'})); 
 
 
 mongoose.connect(process.env.DB_URI)
