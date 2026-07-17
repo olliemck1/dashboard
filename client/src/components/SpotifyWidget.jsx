@@ -8,7 +8,7 @@ function SpotifyWidget() {
         const method = action === 'play' || action === 'pause' ? 'PUT' : 'POST'; 
         
         try {
-        const response = await fetch(`/api/spotify/${action}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/spotify/${action}`, {
             method: method,
         });
         const data = await response.json(); 
@@ -26,7 +26,7 @@ function SpotifyWidget() {
         }
     };
     const fetchCurrentTrack = () => {
-        fetch("http://127.0.0.1:5000/api/spotify/current-track")
+        fetch(`${import.meta.env.VITE_API_URL}/api/spotify/current-track`)
             .then((res) => {
                 if (res.status === 401) {
                     setTrack({error: "please log in"});

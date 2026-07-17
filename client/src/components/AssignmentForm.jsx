@@ -5,7 +5,7 @@ const AssignmentForm = ({ onAssignmentAdded }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await fetch("/api/assignments", {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/assignments`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(formData)

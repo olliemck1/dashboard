@@ -13,7 +13,7 @@ const Dashboard = () => {
 
   const fetchAssignments = async () => {
     try {
-      const res = await fetch("/api/assignments");
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/assignments`);
       const data = await res.json();
       setAssignments(data);
     } catch (err) {

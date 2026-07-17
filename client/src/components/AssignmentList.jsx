@@ -4,7 +4,7 @@ const AssignmentList = ({ assignments, refreshData }) => {
   // 2. We use the refreshData function passed from the Dashboard to trigger updates
   const handleDelete = async (id) => {
     try {
-      const response = await fetch (`api/assignments/${id}`, {
+      const response = await fetch (`${import.meta.env.VITE_API_URL}/api/assignments/${id}`, {
         method: "DELETE",
       });
 
