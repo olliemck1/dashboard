@@ -8,9 +8,10 @@ const PORT = 5000;
 const mongoose = require('mongoose');
 const SpotifyToken = require('./models/SpotifyToken')
 const Assignment = require("./models/assignments");
-const assignments = require('./models/assignments');
+const ical = require("node-ical")
 app.use(express.json())
 app.use(cors({origin: 'http://localhost:5173'})); 
+
 
 mongoose.connect(process.env.DB_URI)
   .then(() => console.log("Success"))
@@ -64,36 +65,12 @@ app.get('/callback', async (req, res) => {
       return res.status(400).send("Authentication failed, login again")
     }
   }
-
-  spotifyApi.authorizationCodeGrant(code)
-    .then(data => {
-      const accessToken = data.body['access_token'];
-      const refreshToken = data.body['refresh_token'];
-      const expiresIn = data.body['expires_in'];
-
-      console.log('Access Token:', accessToken);
-      console.log('Refresh Token:', refreshToken);
-      console.log('Expires In:', expiresIn);
-
-      spotifyApi.setAccessToken(accessToken);
-      spotifyApi.setRefreshToken(refreshToken);
-
-      res.send('Success! You can close the window now.');
-    })
-    .catch(error => {
-      console.error('Error retrieving access token:', error);
-      res.status(500).json({ error });
-    });
   });
 
 
 
 app.get('/', (req, res) => {
   res.json({ message: "Backend is online!" });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
 });
 
 app.get('/api/spotify/current-track', ensureAuthenticated, async (req,res) => {
@@ -222,3 +199,41 @@ app.delete("/api/assignments/:id", async (req, res) =>{
     res.status(400).json({error: "failed to delete assignment"})
   }
 })
+
+const syncCalendars = async () => {
+  const calendarSources = [
+    {url: "https://blackboard.durham.ac.uk/webapps/calendar/calendarFeed/8541416732f846089d761f695f74427b/learn.ics", sourceName: "blackboard"},
+    {url: "https://mytimetable.durham.ac.uk/calendar/export/bb7e7a1cc1d99938f9d328823cf600bc77e3e7b8.ics", sourceName: "mytimetable"}
+  ];
+
+  for (const calendar of calendarSources) {
+    try {
+      const rawData = await ical.async.fromURL(calendar.url);
+      for (const key in rawData) {
+        const item = rawData[key];
+        if (item.type === "VEVENT") {
+          const eventData = {
+            title: item.summary,
+            dueData: item.end || item.start,
+            subject: item.location || "University",
+            source: calendar.sourceName,
+            dashboardID: "primary_user"
+          };
+          await Assignment.findOneAndUpdate(
+            {syncId:item.uid},
+            {$set:eventData},
+            {upsert:true, new:true}
+          );
+        }
+      }
+      console.log(`Successfully synced ${calendar.sourceName}`);
+    }catch (error){
+      console.error(`failed to sync ${calendar.sourceName}`, error)
+    }
+  }
+};
+
+app.post("/api/calendar/sync", async (req,res) => {
+  await syncCalendars();
+  res.json({message: "Calendars Synced Succesfully"});
+});

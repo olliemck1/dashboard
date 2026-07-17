@@ -30,14 +30,22 @@ const AssignmentList = () => {
       console.error("Failed to delete (client)", error)
     }
   };
+  
+  console.log("Raw Database Data:", assignments);
+  const upcomingDeadlines = assignments
+    .filter(event => event.source === "blackboard")
+    .filter(event => event.dueDate)
+    .filter(event => new Date(event.dueDate) >= new Date())
+    .sort((a,b) => new Date(a.dueDate)- new Date(b.dueDate))
+    .slice(0,3);
 
 return (
     <div>
-      {assignments.map((a) => (
+      {upcomingDeadlines.map((a) => (
         <div key={a._id} className="assignment-card">
           <h3>{a.title}</h3>
           <p>
-            {a.subject} - Due: {new Date(a.dueDate).toLocaleDateString()}
+            {a.subject} - Due: {a.dueDate ? new Date(a.dueDate).toLocaleDateString() : "TBD"}
           </p>
           <span>Priority: {a.priority}</span>
           <br />
