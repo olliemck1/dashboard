@@ -13,8 +13,8 @@ const cron = require("node-cron")
 app.use(express.json())
 
 const allowedOrigins =[
-  'http://localhost:5173',
-  'https://dashboard-sooty-chi-89.vercel.app/'
+  'http://127.0.0.1:5173',
+  'https://dashboard-sooty-chi-89.vercel.app'
 ];
 
 app.use(cors({
