@@ -1,46 +1,134 @@
+/* =========================================
+   1. BASE DASHBOARD LAYOUT
+   ========================================= */
+body {
+  background-color: #0f1115; 
+  color: #e2e8f0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
 
 .dashboard-container {
-  display: grid;
-  grid-template-columns: 2fr 1fr; 
-  grid-template-rows: auto 1fr; 
-  gap: 24px;
-  padding: 30px;
   max-width: 1400px;
   margin: 0 auto;
-  height: 90vh; 
-  font-family: sans-serif;
+  padding: 20px;
 }
 
 .dashboard-card {
-  background: hsl(228, 16%, 13%);
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  background-color: #1a1d24; 
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border: 1px solid #2d333b;
 }
 
-
-.assignments-area {
-  grid-column: 1 / 2; 
-  grid-row: 1 / 3;    
-  overflow-y: auto;   
+/* =========================================
+   2. CALENDAR FLEXBOX FIXES
+   ========================================= */
+.calendar-area {
+  min-width: 0 !important; 
+  width: 100%;
+  overflow: hidden !important; 
 }
 
-.spotify-area {
-  grid-column: 2 / 3; 
-  grid-row: 1 / 2;    
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
+.calendar-area > div, 
+.rbc-calendar {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
 }
 
-.email-placeholder {
-  grid-column: 2 / 3; 
-  grid-row: 2 / 3;    
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 2px dashed #e2e8f0;
-  background: transparent;
-  box-shadow: none;
+/* =========================================
+   3. CALENDAR DARK THEME OVERRIDES
+   ========================================= */
+.rbc-calendar {
+  color: #e2e8f0; 
+  font-family: inherit;
+}
+
+.rbc-header,
+.rbc-day-bg,
+.rbc-month-row,
+.rbc-month-view,
+.rbc-time-view,
+.rbc-time-header-content {
+  border-color: #2d333b !important;
+}
+
+.rbc-header {
+  padding: 10px 0;
+  font-weight: 600;
+  border-bottom: 1px solid #2d333b !important;
+}
+
+.rbc-off-range-bg,
+.rbc-day-bg.rbc-off-range-bg {
+  background-color: #121419 !important;
+}
+
+.rbc-today {
+  background-color: #222730 !important;
+}
+
+/* =========================================
+   4. CALENDAR TOOLBAR (BUTTONS)
+   ========================================= */
+.rbc-toolbar button {
+  color: #e2e8f0 !important;
+  background-color: #1a1d24 !important;
+  background-image: none !important; 
+  border: 1px solid #2d333b !important;
+  border-radius: 6px;
+  padding: 6px 12px;
+  transition: all 0.2s ease;
+  box-shadow: none !important;
+}
+
+.rbc-toolbar button:hover {
+  background-color: #2d333b !important;
+}
+
+.rbc-toolbar button.rbc-active {
+  background-color: #007bff !important;
+  border-color: #007bff !important;
+  color: white !important;
+}
+
+/* =========================================
+   5. EVENT TRUNCATION & SIZING
+   ========================================= */
+.rbc-event {
+  background-color: #007bff !important; 
+  border-radius: 4px !important;
+  padding: 4px 6px !important; 
+  border: none !important;
+  max-width: 100% !important; 
+  overflow: hidden !important;
+}
+
+.rbc-event-content {
+  white-space: nowrap !important; 
+  overflow: hidden !important; 
+  text-overflow: ellipsis !important; 
+  display: block !important; 
+  width: 100% !important; 
+  font-size: 0.75rem !important;
+} 
+
+/* =========================================
+   6. DAY & WEEK VIEW SPACING
+   ========================================= */
+/* Forces every hour block to have a minimum height */
+.rbc-timeslot-group {
+  min-height: 80px !important; 
+}
+
+/* Adjusts the internal lines (half-hour marks) to space evenly */
+.rbc-time-slot {
+  min-height: 40px !important;
+}
+
+/* Adds a subtle hover effect to the empty time slots */
+.rbc-day-slot .rbc-time-slot:hover {
+  background-color: #222730; 
+  cursor: pointer;
 }

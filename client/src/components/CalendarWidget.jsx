@@ -33,7 +33,7 @@ const CalendarWidget = ({ assignments }) => {
     }));
 
   return (
-    <div style={{ height: "600px", backgroundColor: "white", padding: "15px", borderRadius: "8px" }}>
+    <div style={{ height: "85vh"}}>
       <Calendar
         localizer={localizer}
         events={calendarEvents}
