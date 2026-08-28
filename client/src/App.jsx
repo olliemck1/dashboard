@@ -72,6 +72,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchAssignments();
+
+    // Check if redirected from Spotify login
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('spotify_auth') === 'success') {
+      showToast("Spotify connected successfully!");
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, []);
 
   // Compute KPI summary metrics
