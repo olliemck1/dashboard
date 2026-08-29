@@ -10,7 +10,8 @@ import {
   X,
   Radio,
   BookOpen,
-  Sparkles
+  Sparkles,
+  Download
 } from 'lucide-react';
 import SpotifyWidget from './components/SpotifyWidget';
 import AssignmentForm from './components/AssignmentForm';
@@ -25,6 +26,28 @@ const Dashboard = () => {
   const [isSyncing, setIsSyncing] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [installPrompt, setInstallPrompt] = useState(null);
+
+  // Listen for PWA install prompt
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  }, []);
+
+  const handleInstallApp = async () => {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    if (outcome === 'accepted') {
+      showToast("App installed successfully!");
+      setInstallPrompt(null);
+    }
+  };
 
   // Update clock every minute
   useEffect(() => {
@@ -139,6 +162,19 @@ const Dashboard = () => {
             <RefreshCw size={15} className={isSyncing ? "spin-icon" : ""} />
             <span>{isSyncing ? "Syncing..." : "Sync Feeds"}</span>
           </button>
+
+          {/* PWA Install Button (desktop / android) */}
+          {installPrompt && (
+            <button 
+              className="btn-secondary"
+              onClick={handleInstallApp}
+              title="Install Dashboard as a native desktop / mobile app"
+              style={{ borderColor: "var(--accent-primary)", color: "var(--text-primary)" }}
+            >
+              <Download size={15} color="var(--accent-primary)" />
+              <span>Install App</span>
+            </button>
+          )}
 
           {/* Add Assignment Action */}
           <button 

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e1424" />
+      <stop offset="50%" stop-color="#141c30" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8" />
+      <stop offset="50%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#4338ca" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#818cf8" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background with rounded corners -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" stroke="rgba(255,255,255,0.12)" stroke-width="8" />
+
+  <!-- Outer Glow Ring -->
+  <circle cx="256" cy="256" r="168" fill="none" stroke="url(#glowGrad)" stroke-width="4" stroke-opacity="0.3" stroke-dasharray="8 8" />
+
+  <!-- Center Hex/Shield Badge -->
+  <rect x="136" y="136" width="240" height="240" rx="56" fill="url(#accentGrad)" filter="url(#glow)" />
+
+  <!-- Icon: Modern Layers + Sparkle -->
+  <g transform="translate(186, 186)" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Top Layer / Diamond -->
+    <path d="M70 12 L128 42 L70 72 L12 42 Z" fill="rgba(255,255,255,0.2)" />
+    <!-- Middle Layer -->
+    <path d="M12 76 L70 106 L128 76" />
+    <!-- Bottom Layer -->
+    <path d="M12 110 L70 140 L128 110" />
+    <!-- Glowing Sparkle Dot at Top Right -->
+    <circle cx="120" cy="18" r="6" fill="#38bdf8" stroke="#38bdf8" stroke-width="4" />
+  </g>
+</svg>
