@@ -122,6 +122,8 @@ const Dashboard = () => {
   const completedCount = assignments.filter((item) => item.status === "Completed").length;
   const activeCount = assignments.filter((item) => item.status !== "Completed").length;
 
+  const [mobileTab, setMobileTab] = useState("tasks"); // 'tasks' | 'calendar' | 'spotify'
+
   return ( 
     <div className="dashboard-root">
       
@@ -129,7 +131,7 @@ const Dashboard = () => {
       <header className="dashboard-header">
         <div className="header-brand">
           <div className="brand-icon-wrapper">
-            <Sparkles size={22} />
+            <Sparkles size={20} />
           </div>
           <div>
             <h1 className="brand-title">
@@ -159,8 +161,8 @@ const Dashboard = () => {
             disabled={isSyncing}
             title="Sync Blackboard and Timetable ics feeds"
           >
-            <RefreshCw size={15} className={isSyncing ? "spin-icon" : ""} />
-            <span>{isSyncing ? "Syncing..." : "Sync Feeds"}</span>
+            <RefreshCw size={14} className={isSyncing ? "spin-icon" : ""} />
+            <span>{isSyncing ? "Syncing..." : "Sync"}</span>
           </button>
 
           {/* PWA Install Button (desktop / android) */}
@@ -171,8 +173,8 @@ const Dashboard = () => {
               title="Install Dashboard as a native desktop / mobile app"
               style={{ borderColor: "var(--accent-primary)", color: "var(--text-primary)" }}
             >
-              <Download size={15} color="var(--accent-primary)" />
-              <span>Install App</span>
+              <Download size={14} color="var(--accent-primary)" />
+              <span>Install</span>
             </button>
           )}
 
@@ -181,8 +183,8 @@ const Dashboard = () => {
             className="btn-primary"
             onClick={() => setIsFormOpen(true)}
           >
-            <Plus size={16} />
-            <span>Add Task</span>
+            <Plus size={15} />
+            <span>Task</span>
           </button>
         </div>
       </header>
@@ -191,7 +193,7 @@ const Dashboard = () => {
       <section className="metrics-grid">
         <div className="metric-card" style={{ "--card-accent": "#ef4444" }}>
           <div className="metric-icon-box" style={{ background: "var(--color-danger-bg)", color: "var(--color-danger)" }}>
-            <AlertTriangle size={22} />
+            <AlertTriangle size={18} />
           </div>
           <div className="metric-content">
             <span className="metric-label">Due in 7 Days</span>
@@ -202,7 +204,7 @@ const Dashboard = () => {
 
         <div className="metric-card" style={{ "--card-accent": "#f59e0b" }}>
           <div className="metric-icon-box" style={{ background: "var(--color-warning-bg)", color: "var(--color-warning)" }}>
-            <Clock size={22} />
+            <Clock size={18} />
           </div>
           <div className="metric-content">
             <span className="metric-label">High Priority</span>
@@ -213,7 +215,7 @@ const Dashboard = () => {
 
         <div className="metric-card" style={{ "--card-accent": "#6366f1" }}>
           <div className="metric-icon-box" style={{ background: "var(--accent-primary-glow)", color: "var(--accent-primary)" }}>
-            <BookOpen size={22} />
+            <BookOpen size={18} />
           </div>
           <div className="metric-content">
             <span className="metric-label">Active Tasks</span>
@@ -224,10 +226,10 @@ const Dashboard = () => {
 
         <div className="metric-card" style={{ "--card-accent": "#10b981" }}>
           <div className="metric-icon-box" style={{ background: "var(--color-success-bg)", color: "var(--color-success)" }}>
-            <CheckCircle2 size={22} />
+            <CheckCircle2 size={18} />
           </div>
           <div className="metric-content">
-            <span className="metric-label">Completion Rate</span>
+            <span className="metric-label">Completion</span>
             <span className="metric-value">
               {assignments.length > 0 ? `${Math.round((completedCount / assignments.length) * 100)}%` : "100%"}
             </span>
@@ -236,14 +238,42 @@ const Dashboard = () => {
         </div>
       </section>
 
+      {/* MOBILE SEGMENTED VIEW SWITCHER (Visible <= 768px) */}
+      <div className="mobile-view-tabs">
+        <button
+          className={`mobile-tab-btn ${mobileTab === 'tasks' ? 'active' : ''}`}
+          onClick={() => setMobileTab('tasks')}
+        >
+          <Layers size={14} />
+          <span>Tasks</span>
+          <span className="tab-count-badge">{activeCount}</span>
+        </button>
+
+        <button
+          className={`mobile-tab-btn ${mobileTab === 'calendar' ? 'active' : ''}`}
+          onClick={() => setMobileTab('calendar')}
+        >
+          <CalendarIcon size={14} />
+          <span>Schedule</span>
+        </button>
+
+        <button
+          className={`mobile-tab-btn ${mobileTab === 'spotify' ? 'active' : ''}`}
+          onClick={() => setMobileTab('spotify')}
+        >
+          <Radio size={14} />
+          <span>Focus Music</span>
+        </button>
+      </div>
+
       {/* MAIN TWO-COLUMN DASHBOARD GRID */}
       <main className="dashboard-main-grid">
         
         {/* LEFT COLUMN: Modern Interactive Calendar */}
-        <section className="dashboard-card calendar-area">
+        <section className={`dashboard-card calendar-area ${mobileTab !== 'calendar' ? 'hide-on-mobile' : ''}`}>
           <div className="card-header-row">
             <div className="card-title-group">
-              <CalendarIcon size={20} color="var(--accent-primary)" />
+              <CalendarIcon size={18} color="var(--accent-primary)" />
               <h2 className="card-title">Academic Schedule</h2>
             </div>
             <span className="card-badge">Live Sync</span>
@@ -256,18 +286,18 @@ const Dashboard = () => {
         <div className="assignments-column">
           
           {/* Assignment Management Hub */}
-          <section className="dashboard-card">
+          <section className={`dashboard-card ${mobileTab !== 'tasks' ? 'hide-on-mobile' : ''}`}>
             <div className="card-header-row">
               <div className="card-title-group">
-                <Layers size={20} color="var(--accent-primary)" />
+                <Layers size={18} color="var(--accent-primary)" />
                 <h2 className="card-title">Deadlines & Tasks</h2>
               </div>
               <button
                 className="btn-secondary"
                 onClick={() => setIsFormOpen(true)}
-                style={{ padding: "5px 10px", fontSize: "0.775rem" }}
+                style={{ padding: "4px 8px", fontSize: "0.75rem" }}
               >
-                <Plus size={14} /> New
+                <Plus size={13} /> New
               </button>
             </div>
 
@@ -275,7 +305,7 @@ const Dashboard = () => {
           </section>
 
           {/* Spotify Focus Player Deck */}
-          <section className="dashboard-card spotify-area">
+          <section className={`dashboard-card spotify-area ${mobileTab !== 'spotify' ? 'hide-on-mobile' : ''}`}>
             <SpotifyWidget />
           </section>
 
