@@ -239,9 +239,9 @@ app.delete("/api/assignments/:id", async (req, res) => {
 // Calendar Sync via iCal Feeds
 const syncCalendars = async () => {
   const calendarSources = [
-    { url: "https://blackboard.durham.ac.uk/webapps/calendar/calendarFeed/<your_token>/learn.ics", sourceName: "blackboard" },
-    { url: "https://mytimetable.durham.ac.uk/calendar/export/<your_token>.ics", sourceName: "mytimetable" }
-  ];
+    { url: process.env.BLACKBOARD_ICAL_URL, sourceName: "blackboard" },
+    { url: process.env.MYTIMETABLE_ICAL_URL, sourceName: "mytimetable" }
+  ].filter(source => Boolean(source.url));
 
   for (const calendar of calendarSources) {
     try {
